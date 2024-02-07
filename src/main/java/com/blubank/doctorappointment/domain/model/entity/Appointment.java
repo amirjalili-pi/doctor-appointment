@@ -1,4 +1,4 @@
-package com.blubank.doctorappointment.model.entity;
+package com.blubank.doctorappointment.domain.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,9 +18,9 @@ public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(nullable = false)
+    @Column
     private String patientName;
-    @Column(nullable = false)
+    @Column
     private String patientNumber;
     @Column(nullable = false)
     private LocalDate dateOfAppointment;

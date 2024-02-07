@@ -1,6 +1,8 @@
-package com.blubank.doctorappointment.model.dto.response;
+package com.blubank.doctorappointment.domain.model.dto.response;
 
-import com.blubank.doctorappointment.model.dto.ErrorObjectDto;
+import com.blubank.doctorappointment.domain.model.dto.ErrorObjectDto;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +10,10 @@ import java.util.List;
 public class ResponseDto {
     private Boolean success;
 
-    private List<ErrorObjectDto> errorObjectList;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("errors")
+    private List<ErrorObjectDto> errorObjectList = new ArrayList<>();
+
 
 
     public ResponseDto(Boolean success, List<ErrorObjectDto> errorObjectList) {
@@ -28,9 +33,6 @@ public class ResponseDto {
     }
 
     public List<ErrorObjectDto> getErrorObjectList() {
-        if (errorObjectList == null) {
-            errorObjectList = new ArrayList<>();
-        }
         return errorObjectList;
     }
 

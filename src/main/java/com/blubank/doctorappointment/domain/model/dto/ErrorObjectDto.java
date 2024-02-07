@@ -1,4 +1,4 @@
-package com.blubank.doctorappointment.model.dto;
+package com.blubank.doctorappointment.domain.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties(value = {"httpStatusCode"})
+//@JsonIgnoreProperties(value = {"httpStatusCode"})
 public class ErrorObjectDto {
 
     private String fieldName;
-    private String httpStatusCode;
+//    private String httpStatusCode;
     private String message;
 
 }
