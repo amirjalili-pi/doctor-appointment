@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppointmentWsDto {
+public class AppointmentInfoWsDto {
     @JsonIgnore
     private Long id;
     @JsonInclude(JsonInclude.Include.NON_NULL)

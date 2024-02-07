@@ -1,11 +1,9 @@
 package com.blubank.doctorappointment.service.impl;
 
-import com.blubank.doctorappointment.domain.model.dto.AppointmentWsDto;
-import com.blubank.doctorappointment.domain.model.dto.request.AddOpenTimeRequestDtoRequest;
+import com.blubank.doctorappointment.domain.dao.IAppointmentDao;
+import com.blubank.doctorappointment.domain.model.dto.AppointmentInfoWsDto;
 import com.blubank.doctorappointment.domain.model.entity.Appointment;
-import com.blubank.doctorappointment.domain.model.repository.AppointmentRepository;
 import com.blubank.doctorappointment.service.IAppointmentService;
-import com.blubank.doctorappointment.validation.impl.AddOpenTimeRequestValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,47 +13,69 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class AppointmentServiceImpl implements IAppointmentService {
 
-    private final AppointmentRepository appointmentRepository;
-
-    private final AddOpenTimeRequestValidator addOpenTimeRequestValidator;
+    private final IAppointmentDao appointmentDao;
 
     @Autowired
-    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, AddOpenTimeRequestValidator addOpenTimeRequestValidator) {
-        this.appointmentRepository = appointmentRepository;
-        this.addOpenTimeRequestValidator = addOpenTimeRequestValidator;
+    public AppointmentServiceImpl(IAppointmentDao appointmentDao) {
+        this.appointmentDao = appointmentDao;
     }
+
+
+//    @Transactional
+//    @Override
+//    public boolean addOpenAppointment(AddAppointmentRequestDtoRequest request) {
+//        boolean result = true;
+//        result = addOpenTimeRequestValidator.validate(request);
+//        if (result) {
+//        LocalTime timeOfStart = LocalTime.parse(request.getTimeOfStart());
+//        LocalTime timeOfFinish = LocalTime.parse(request.getTimeOfFinish());
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//        LocalDate dateOfAppointment = LocalDate.parse(request.getDate(), formatter);
+//            LocalTime timeOfEndingAppointment = timeOfStart.plusMinutes(30L);
+//            while (timeOfEndingAppointment.isBefore(timeOfFinish)) {
+//
+//                Appointment appointment = createOpenAppointment(timeOfStart, timeOfEndingAppointment, dateOfAppointment);
+//                Optional<Appointment> optionalExistAppointment = appointmentRepository.findAppointmentByDateAndStartTimeAndFinishTime(dateOfAppointment, timeOfStart, timeOfEndingAppointment);
+//                if (optionalExistAppointment.isEmpty()) {
+//                    appointmentRepository.save(appointment);
+//                }
+//                timeOfStart = timeOfEndingAppointment;
+//                timeOfEndingAppointment = timeOfEndingAppointment.plusMinutes(30L);
+//
+//            }
+//        }
+//        return result;
+//    }
+
     @Transactional
     @Override
-    public boolean addOpenAppointment(AddOpenTimeRequestDtoRequest request) {
-        boolean result = true;
-        result = addOpenTimeRequestValidator.validate(request);
-        if (result) {
-        LocalTime timeOfStart = LocalTime.parse(request.getTimeOfStart());
-        LocalTime timeOfFinish = LocalTime.parse(request.getTimeOfFinish());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate dateOfAppointment = LocalDate.parse(request.getDate(), formatter);
-            LocalTime timeOfEndingAppointment = timeOfStart.plusMinutes(30L);
-            while (timeOfEndingAppointment.isBefore(timeOfFinish)) {
-
-                Appointment appointment = createOpenAppointment(timeOfStart, timeOfEndingAppointment, dateOfAppointment);
-                appointmentRepository.save(appointment);
-                timeOfStart = timeOfEndingAppointment;
-                timeOfEndingAppointment = timeOfEndingAppointment.plusMinutes(30L);
-
-            }
-        }
-        return result;
+    public void addAppointment(Appointment appointment) {
+        appointmentDao.addAppointment(appointment);
     }
 
+    @Transactional
     @Override
-    public List<AppointmentWsDto> getAllAppointments() {
-        List<Appointment> appointments = appointmentRepository.findAll();
-        List<AppointmentWsDto> appointmentWsDtoList = new ArrayList<>();
+    public void deleteAppointment(Appointment appointment) {
+        appointmentDao.deleteAppointment(appointment.getDateOfAppointment(), appointment.getTimeOfStart(), appointment.getTimeOfFinish());
+    }
+
+    @Transactional
+    @Override
+    public Optional<Appointment> findAppointmentByDateAndTimeOfStartAndTimeOfFinish(LocalDate dateOfAppointment, LocalTime timeOfStart, LocalTime timeOfFinish) {
+        return appointmentDao.findAppointmentByDateAndTimeOfStartAndTimeOfFinish(dateOfAppointment, timeOfStart, timeOfFinish);
+    }
+
+    @Transactional
+    @Override
+    public List<AppointmentInfoWsDto> getAllAppointmentsAsInfoWsDto() {
+        List<Appointment> appointments = appointmentDao.getAllAppointments();
+        List<AppointmentInfoWsDto> appointmentWsDtoList = new ArrayList<>();
         if (appointments.isEmpty()) {
             return appointmentWsDtoList;
         }
@@ -63,17 +83,10 @@ public class AppointmentServiceImpl implements IAppointmentService {
         return appointmentWsDtoList;
     }
 
-    private Appointment createOpenAppointment(LocalTime timeOfStart, LocalTime timeOfFinish, LocalDate dateOfAppointment) {
-        Appointment appointment = new Appointment();
-        appointment.setDateOfAppointment(dateOfAppointment);
-        appointment.setTimeOfStart(timeOfStart);
-        appointment.setTimeOfFinish(timeOfFinish);
-        appointment.setIsReserved(Boolean.FALSE);
-        return appointment;
-    }
 
-    private AppointmentWsDto mapToAppointmentWsDto(Appointment appointment) {
-        AppointmentWsDto appointmentWsDto = new AppointmentWsDto();
+
+    private AppointmentInfoWsDto mapToAppointmentWsDto(Appointment appointment) {
+        AppointmentInfoWsDto appointmentWsDto = new AppointmentInfoWsDto();
         appointmentWsDto.setId(appointment.getId());
         appointmentWsDto.setPatientName(appointment.getPatientName());
         appointmentWsDto.setPatientNumber(appointment.getPatientNumber());

@@ -8,11 +8,16 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 
     @Query(value = "select * from appointment where date_of_appointment = :date_of_appointment", nativeQuery = true)
     List<Appointment> findAppointmentByDateOfCreate(@Param("date_of_appointment") LocalDate dateOfAppointment);
+
+    @Query(value = "select * from appointment where date_of_appointment = :date_of_appointment and time_of_start = :time_of_start and time_of_finish = :time_of_finish", nativeQuery = true)
+    Optional<Appointment> findAppointmentByDateAndStartTimeAndFinishTime(@Param("date_of_appointment") LocalDate dateOfAppointment,@Param("time_of_start") LocalTime timeOfStart,@Param("time_of_finish") LocalTime timeOfFinish);
 }

@@ -13,7 +13,7 @@ import java.time.LocalTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Appointment {
+public class Appointment extends ABaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
