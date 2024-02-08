@@ -14,7 +14,7 @@ import java.util.Map;
 @Component
 public class AppointmentProcessorFactory<R extends AAppointmentWsDto> {
 
-    private List<IAppointmentProcessor<R>> appointmentProcessorList;
+    private final List<IAppointmentProcessor<R>> appointmentProcessorList;
 
     private final Map<ActionTypeEnum, IAppointmentProcessor<R>> appointmentProcessorMap = new HashMap<>();
 

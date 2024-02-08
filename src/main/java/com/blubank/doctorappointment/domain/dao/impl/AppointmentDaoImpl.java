@@ -47,4 +47,9 @@ public class AppointmentDaoImpl implements IAppointmentDao {
         appointmentRepository.save(appointment);
         return true;
     }
+
+    @Override
+    public List<Appointment> findAppointmentByDateAndReservedFlag(LocalDate dateOfAppointment, Boolean isReserved) {
+        return appointmentRepository.findAppointmentsByDateAndReservedFlag(dateOfAppointment, isReserved);
+    }
 }

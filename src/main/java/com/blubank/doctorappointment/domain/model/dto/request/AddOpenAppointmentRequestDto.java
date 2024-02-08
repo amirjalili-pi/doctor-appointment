@@ -12,4 +12,8 @@ import java.io.Serializable;
 
 public class AddOpenAppointmentRequestDto extends AAppointmentWsDto implements Serializable {
 
+    @Override
+    public String getKey() {
+        return getDate() + getTimeOfStart() + getTimeOfFinish();
+    }
 }

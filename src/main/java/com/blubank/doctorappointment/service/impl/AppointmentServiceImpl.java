@@ -83,6 +83,14 @@ public class AppointmentServiceImpl implements IAppointmentService {
         return appointmentWsDtoList;
     }
 
+    @Override
+    public List<AppointmentInfoWsDto> findAppointmentsByDateAndReservedFlag(String date, Boolean isReserved) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate dateOfAppointment = LocalDate.parse(date, formatter);
+        List<Appointment> appointments = appointmentDao.findAppointmentByDateAndReservedFlag(dateOfAppointment, isReserved);
+        List<AppointmentInfoWsDto> appointmentInfoWsDtoList = appointments.stream().map(this::mapToAppointmentWsDto).collect(Collectors.toList());
+        return appointmentInfoWsDtoList;
+    }
 
 
     private AppointmentInfoWsDto mapToAppointmentWsDto(Appointment appointment) {

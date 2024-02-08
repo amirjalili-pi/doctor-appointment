@@ -17,6 +17,8 @@ public interface IAppointmentService {
 
     List<AppointmentInfoWsDto> getAllAppointmentsAsInfoWsDto();
 
+    List<AppointmentInfoWsDto> findAppointmentsByDateAndReservedFlag(String dateOfAppointment, Boolean isReserved);
+
 //    <R extends AAppointmentWsDto>  boolean startProcess(ActionTypeEnum actionType, R request);
 
 

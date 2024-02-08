@@ -1,5 +1,6 @@
 package com.blubank.doctorappointment.domain.model.dto.response;
 
+import com.blubank.doctorappointment.domain.model.dto.AppointmentInfoWsDto;
 import com.blubank.doctorappointment.domain.model.dto.ErrorObjectDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -10,6 +11,11 @@ import java.util.List;
 
 public class ResponseDto {
     private Boolean success;
+
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("appointmentList")
+    private List<AppointmentInfoWsDto> appointmentInfoWsDtoList;
 
     @JsonIgnore
     private Integer httpStatus;
@@ -50,5 +56,13 @@ public class ResponseDto {
 
     public void setErrorObjectList(List<ErrorObjectDto> errorObjectList) {
         this.errorObjectList = errorObjectList;
+    }
+
+    public List<AppointmentInfoWsDto> getAppointmentInfoWsDtoList() {
+        return appointmentInfoWsDtoList;
+    }
+
+    public void setAppointmentInfoWsDtoList(List<AppointmentInfoWsDto> appointmentInfoWsDtoList) {
+        this.appointmentInfoWsDtoList = appointmentInfoWsDtoList;
     }
 }

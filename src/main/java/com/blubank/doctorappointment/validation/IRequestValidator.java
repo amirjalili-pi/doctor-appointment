@@ -4,5 +4,7 @@ import com.blubank.doctorappointment.domain.model.dto.base.ARequestBaseDto;
 
 public interface IRequestValidator<R extends ARequestBaseDto>{
 
-    boolean validate(R request);
+    boolean validateRequest(R request);
+
+
 }

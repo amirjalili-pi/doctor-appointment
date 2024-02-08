@@ -5,18 +5,19 @@ import com.blubank.doctorappointment.domain.model.dto.AppointmentInfoWsDto;
 import com.blubank.doctorappointment.domain.model.dto.ErrorObjectDto;
 import com.blubank.doctorappointment.domain.model.dto.base.ARequestBaseDto;
 import com.blubank.doctorappointment.domain.model.dto.request.AddOpenAppointmentRequestDto;
+import com.blubank.doctorappointment.domain.model.dto.request.GetOpenAppointmentRequestDto;
 import com.blubank.doctorappointment.domain.model.dto.request.RemoveOpenAppointmentRequestDto;
 import com.blubank.doctorappointment.domain.model.dto.response.ResponseDto;
 import com.blubank.doctorappointment.factory.AppointmentProcessorFactory;
 import com.blubank.doctorappointment.processor.IAppointmentProcessor;
 import com.blubank.doctorappointment.service.IAppointmentService;
+import com.blubank.doctorappointment.validation.impl.GetOpenAppointmentRequestValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,19 +28,22 @@ public class AppointmentController {
 
     private final AppointmentProcessorFactory appointmentProcessorFactory;
 
+    private final GetOpenAppointmentRequestValidator getOpenAppointmentRequestValidator;
+
     private final IAppointmentService appointmentService;
 
     @Autowired
-    public AppointmentController(AppointmentProcessorFactory appointmentProcessorFactory, IAppointmentService appointmentService) {
+    public AppointmentController(AppointmentProcessorFactory appointmentProcessorFactory, GetOpenAppointmentRequestValidator getOpenAppointmentRequestValidator, IAppointmentService appointmentService) {
         this.appointmentProcessorFactory = appointmentProcessorFactory;
+        this.getOpenAppointmentRequestValidator = getOpenAppointmentRequestValidator;
         this.appointmentService = appointmentService;
     }
 
     @DeleteMapping("/doctor/delete-open-appointment")
     public ResponseEntity<ResponseDto> deleteOpenTime(@Valid @RequestBody RemoveOpenAppointmentRequestDto requestDto) {
         try {
-            IAppointmentProcessor appointmentProcessor = appointmentProcessorFactory.getAppointmentProcessor(ActionTypeEnum.Delete);
-            boolean result = appointmentProcessor.executeProcess(ActionTypeEnum.Delete, requestDto);
+            IAppointmentProcessor appointmentProcessor = appointmentProcessorFactory.getAppointmentProcessor(ActionTypeEnum.DeleteByDoctor);
+            boolean result = appointmentProcessor.executeProcess(ActionTypeEnum.DeleteByDoctor, requestDto);
             if (!result) {
                 ResponseDto responseDto = handleErrorMessages(requestDto, Boolean.FALSE);
                 return new ResponseEntity<>(responseDto, HttpStatus.resolve(responseDto.getHttpStatus()));
@@ -52,11 +56,11 @@ public class AppointmentController {
         }
     }
 
-    @PostMapping("/doctor/add-open_appointment")
-    public ResponseEntity<ResponseDto> addOpenTime(@Valid @RequestBody AddOpenAppointmentRequestDto requestDto) {
+    @PostMapping("/doctor/add-open-appointment")
+    public ResponseEntity<ResponseDto> addOpenAppointment(@Valid @RequestBody AddOpenAppointmentRequestDto requestDto) {
         try {
-            IAppointmentProcessor appointmentProcessor = appointmentProcessorFactory.getAppointmentProcessor(ActionTypeEnum.Insert);
-            boolean result = appointmentProcessor.executeProcess(ActionTypeEnum.Insert, requestDto);
+            IAppointmentProcessor appointmentProcessor = appointmentProcessorFactory.getAppointmentProcessor(ActionTypeEnum.InsertByDoctor);
+            boolean result = appointmentProcessor.executeProcess(ActionTypeEnum.InsertByDoctor, requestDto);
             if (!result) {
                 ResponseDto responseDto = handleErrorMessages(requestDto, Boolean.FALSE);
                 return new ResponseEntity<>(responseDto, HttpStatus.resolve(responseDto.getHttpStatus()));
@@ -71,12 +75,41 @@ public class AppointmentController {
 
     }
     @GetMapping("/doctor/all-appointments")
-    public ResponseEntity<List<AppointmentInfoWsDto>> getAllAppointments() {
+    public ResponseEntity<ResponseDto> getAllAppointments() {
         try {
             List<AppointmentInfoWsDto> allAppointments = appointmentService.getAllAppointmentsAsInfoWsDto();
-            return new ResponseEntity<>(allAppointments, HttpStatus.OK);
+            ResponseDto responseDto = new ResponseDto();
+            responseDto.setAppointmentInfoWsDtoList(allAppointments);
+            responseDto.setSuccess(true);
+            responseDto.setHttpStatus(HttpStatus.OK.value());
+            responseDto.setErrorObjectList(null);
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+            ResponseDto responseDto = new ResponseDto(Boolean.FALSE, null);
+            return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/patient/all-open-appointment")
+    public ResponseEntity<ResponseDto> getOpenAppointmentByDate(@RequestBody GetOpenAppointmentRequestDto requestDto) {
+        try {
+            boolean result = getOpenAppointmentRequestValidator.validateRequest(requestDto);
+            if (!result) {
+                ResponseDto responseDto = handleErrorMessages(requestDto, result);
+                return new ResponseEntity<>(responseDto, HttpStatus.resolve(responseDto.getHttpStatus()));
+            } else {
+                List<AppointmentInfoWsDto> appointmentInfoWsDtos = appointmentService
+                        .findAppointmentsByDateAndReservedFlag(requestDto.getDate(), Boolean.FALSE);
+                ResponseDto responseDto = new ResponseDto();
+                responseDto.setAppointmentInfoWsDtoList(appointmentInfoWsDtos);
+                responseDto.setSuccess(true);
+                responseDto.setHttpStatus(HttpStatus.OK.value());
+                responseDto.setErrorObjectList(null);
+                return new ResponseEntity<>(responseDto, HttpStatus.OK);
+
+            }
+        } catch (Exception e) {
+            ResponseDto responseDto = new ResponseDto(Boolean.FALSE, null);
+            return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

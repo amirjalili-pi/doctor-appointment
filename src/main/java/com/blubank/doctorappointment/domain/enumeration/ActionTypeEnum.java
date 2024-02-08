@@ -7,9 +7,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum ActionTypeEnum {
-    Insert(0),
-    Update(1),
-    Delete(2);
+    InsertByDoctor(0),
+    UpdateByPatient(1),
+    DeleteByDoctor(2),
+    ReadByPatient(3);
 
     ActionTypeEnum(int ModifyActionTypeCode) {
         this.ModifyActionTypeCode = ModifyActionTypeCode;
@@ -39,12 +40,14 @@ public enum ActionTypeEnum {
     @Override
     public String toString() {
         switch (this) {
-            case Insert:
-                return "Insert";
-            case Update:
-                return "Update";
-            case Delete:
-                return "Delete";
+            case InsertByDoctor:
+                return "InsertByDoctor";
+            case UpdateByPatient:
+                return "UpdateByPatient";
+            case DeleteByDoctor:
+                return "DeleteByDoctor";
+            case ReadByPatient:
+                return "ReadByPatient";
             default:
                 return "Undefined";
         }

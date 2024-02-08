@@ -18,4 +18,6 @@ public interface IAppointmentDao {
 
     boolean addAppointment(Appointment appointment);
 
+    List<Appointment> findAppointmentByDateAndReservedFlag(LocalDate dateOfAppointment, Boolean isReserved);
+
 }

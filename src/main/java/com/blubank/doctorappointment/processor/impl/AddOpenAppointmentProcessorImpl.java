@@ -12,27 +12,29 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Component
-public class AddAppointmentProcessorImpl extends AAppointmentProcessor<AddOpenAppointmentRequestDto> {
+public class AddOpenAppointmentProcessorImpl extends AAppointmentProcessor<AddOpenAppointmentRequestDto> {
 
 
 
     @Autowired
-    protected AddAppointmentProcessorImpl(IRequestValidator<AddOpenAppointmentRequestDto> requestValidator, IAppointmentService appointmentService) {
+    protected AddOpenAppointmentProcessorImpl(IRequestValidator<AddOpenAppointmentRequestDto> requestValidator, IAppointmentService appointmentService) {
         super(requestValidator, appointmentService);
     }
 
+
     @Transactional
     @Override
-    protected boolean executeInternalProcess(AddOpenAppointmentRequestDto request) {
+    public boolean executeInternalProcess(AddOpenAppointmentRequestDto request) {
         boolean result = true;
-        Appointment appointmentReq = mapRequestToAppointment(request);
-        LocalTime timeOfStart = appointmentReq.getTimeOfStart();
+        LocalTime timeOfStart = LocalTime.parse(request.getTimeOfStart());
         LocalTime timeOfEndingAppointment = timeOfStart.plusMinutes(30L);
-        LocalTime timeOfFinish = appointmentReq.getTimeOfFinish();
-        LocalDate dateOfAppointment = appointmentReq.getDateOfAppointment();
+        LocalTime timeOfFinish = LocalTime.parse(request.getTimeOfFinish());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate dateOfAppointment = LocalDate.parse(request.getDate(), formatter);
         while (timeOfEndingAppointment.isBefore(timeOfFinish)) {
 
             Appointment appointment = createOpenAppointment(timeOfStart, timeOfEndingAppointment, dateOfAppointment);
@@ -58,6 +60,6 @@ public class AddAppointmentProcessorImpl extends AAppointmentProcessor<AddOpenAp
 
     @Override
     public ActionTypeEnum getAction() {
-        return ActionTypeEnum.Insert;
+        return ActionTypeEnum.InsertByDoctor;
     }
 }

@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 @Setter
 @Getter
-public abstract class AAppointmentWsDto extends ARequestBaseDto implements Serializable {
+public abstract class AAppointmentWsDto extends ARequestBaseDto{
     private String date;
 
     private String timeOfStart;

@@ -1,15 +1,18 @@
 package com.blubank.doctorappointment.domain.model.dto.request;
 
-import com.blubank.doctorappointment.domain.model.dto.AAppointmentWsDto;
+import com.blubank.doctorappointment.domain.model.dto.base.ARequestBaseDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+public class GetOpenAppointmentRequestDto extends ARequestBaseDto {
 
-public class RemoveOpenAppointmentRequestDto extends AAppointmentWsDto {
+    private String date;
+
+
     @Override
     public String getKey() {
-        return getDate() + getTimeOfStart() + getTimeOfFinish();
+        return date;
     }
 }

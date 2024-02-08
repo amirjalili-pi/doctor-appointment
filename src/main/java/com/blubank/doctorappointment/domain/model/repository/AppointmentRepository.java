@@ -20,4 +20,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     @Query(value = "select * from appointment where date_of_appointment = :date_of_appointment and time_of_start = :time_of_start and time_of_finish = :time_of_finish", nativeQuery = true)
     Optional<Appointment> findAppointmentByDateAndStartTimeAndFinishTime(@Param("date_of_appointment") LocalDate dateOfAppointment,@Param("time_of_start") LocalTime timeOfStart,@Param("time_of_finish") LocalTime timeOfFinish);
+
+    @Query(value = "select * from appointment where date_of_appointment = :date_of_appointment and is_reserved = :is_reserved", nativeQuery = true)
+    List<Appointment> findAppointmentsByDateAndReservedFlag(@Param("date_of_appointment") LocalDate dateOfAppointment, @Param("is_reserved") Boolean isReserved);
 }

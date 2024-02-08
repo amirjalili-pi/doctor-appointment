@@ -3,6 +3,7 @@ package com.blubank.doctorappointment.processor;
 import com.blubank.doctorappointment.domain.enumeration.ActionTypeEnum;
 import com.blubank.doctorappointment.domain.model.dto.AAppointmentWsDto;
 import com.blubank.doctorappointment.domain.model.dto.ErrorObjectDto;
+import com.blubank.doctorappointment.domain.model.dto.base.ARequestBaseDto;
 import com.blubank.doctorappointment.domain.model.entity.Appointment;
 import com.blubank.doctorappointment.service.IAppointmentService;
 import com.blubank.doctorappointment.validation.IRequestValidator;
@@ -14,9 +15,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
-import java.util.Optional;
 
-public abstract class AAppointmentProcessor<R extends AAppointmentWsDto> implements IAppointmentProcessor<R> {
+public abstract class AAppointmentProcessor<R extends ARequestBaseDto> implements IAppointmentProcessor<R> {
 
 
     HazelcastInstance hzInstance = Hazelcast.newHazelcastInstance();
@@ -33,15 +33,16 @@ public abstract class AAppointmentProcessor<R extends AAppointmentWsDto> impleme
     @Override
     public boolean executeProcess(ActionTypeEnum actionType, R request) {
         Map<String, String> keyMap = hzInstance.getMap("data");
-
         try {
             boolean result = true;
-            result = requestValidator.validate(request);
+            result = requestValidator.validateRequest(request);
             if (result) {
-                if (actionType == ActionTypeEnum.Insert) {
-                    result = executeInternalProcess(request);
-                } else {
-                    String key = request.getDate() + request.getTimeOfStart() + request.getTimeOfFinish();
+                switch (actionType) {
+                    case InsertByDoctor:
+                        result = executeInternalProcess(request);
+                        break;
+                    case DeleteByDoctor:
+                        String key = request.getKey();
                         if (keyMap.containsKey(key)) {
                             result = false;
                             ErrorObjectDto errorObjectDto = new ErrorObjectDto("process: " + actionType.toString() + "Appointment", HttpStatus.REQUEST_TIMEOUT.value(), "same request is in process please try again a few seconds later");
@@ -49,9 +50,12 @@ public abstract class AAppointmentProcessor<R extends AAppointmentWsDto> impleme
                         } else {
                             keyMap.put(key, "appointment");
                         }
-                        result = executeInternalProcess(request);
-
-
+                        if (result) {
+                            result = executeInternalProcess(request);
+                        }
+                        break;
+                    default:
+                        return false;
                 }
             }
             return result;
@@ -60,22 +64,11 @@ public abstract class AAppointmentProcessor<R extends AAppointmentWsDto> impleme
             request.getErrorObjects().add(errorObjectDto);
             return false;
         } finally {
-            keyMap.clear();
+            keyMap.remove(request.getKey());
         }
 
     }
 
-    protected Appointment mapRequestToAppointment(R request) {
-        Appointment appointment = new Appointment();
-        LocalTime timeOfStart = LocalTime.parse(request.getTimeOfStart());
-        LocalTime timeOfFinish = LocalTime.parse(request.getTimeOfFinish());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate dateOfAppointment = LocalDate.parse(request.getDate(), formatter);
-        appointment.setTimeOfStart(timeOfStart);
-        appointment.setTimeOfFinish(timeOfFinish);
-        appointment.setDateOfAppointment(dateOfAppointment);
-        return appointment;
-    }
 
     protected abstract boolean executeInternalProcess(R request);
 }
