@@ -42,8 +42,8 @@ public class AppointmentDaoImpl implements IAppointmentDao {
     }
 
     @Override
-    public void saveAppointment(Appointment appointment) {
-        appointmentRepository.save(appointment);
+    public Appointment saveAppointment(Appointment appointment) {
+        return appointmentRepository.save(appointment);
 
     }
     @Override

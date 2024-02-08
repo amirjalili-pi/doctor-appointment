@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IAppointmentService {
-    void saveAppointment(Appointment appointment);
+    Appointment saveAppointment(Appointment appointment);
 
     void deleteAppointment(Appointment appointment);
 

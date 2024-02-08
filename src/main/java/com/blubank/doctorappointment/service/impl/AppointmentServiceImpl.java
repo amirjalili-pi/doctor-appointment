@@ -26,8 +26,8 @@ public class AppointmentServiceImpl implements IAppointmentService {
     }
 
     @Override
-    public void saveAppointment(Appointment appointment) {
-        appointmentDao.saveAppointment(appointment);
+    public Appointment saveAppointment(Appointment appointment) {
+        return appointmentDao.saveAppointment(appointment);
     }
 
 

@@ -15,7 +15,7 @@ public interface IAppointmentDao {
 
     void deleteAppointment(LocalDate dateOfAppointment, LocalTime timeOfStart, LocalTime timeOfFinish);
 
-    void saveAppointment(Appointment appointment);
+    Appointment saveAppointment(Appointment appointment);
     List<Appointment> findAppointmentsByDateAndReservedFlag(LocalDate dateOfAppointment, Boolean isReserved);
 
     List<Appointment> findAppointmentsByPhoneNumber(String phoneNumber);

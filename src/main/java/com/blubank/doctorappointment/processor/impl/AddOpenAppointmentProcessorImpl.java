@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 @Component
@@ -35,7 +36,7 @@ public class AddOpenAppointmentProcessorImpl extends AAppointmentProcessor<AddOp
         LocalTime timeOfFinish = LocalTime.parse(request.getTimeOfFinish());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDate dateOfAppointment = LocalDate.parse(request.getDate(), formatter);
-        while (timeOfEndingAppointment.isBefore(timeOfFinish)) {
+        while (timeOfEndingAppointment.until(timeOfFinish, ChronoUnit.MINUTES) >= 0) {
 
             Appointment appointment = createOpenAppointment(timeOfStart, timeOfEndingAppointment, dateOfAppointment);
             Optional<Appointment> optionalExistAppointment = appointmentService.findAppointmentByDateAndTimeOfStartAndTimeOfFinish(dateOfAppointment, timeOfStart, timeOfEndingAppointment);
