@@ -3,7 +3,6 @@ package com.blubank.doctorappointment.domain.model.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -21,7 +20,7 @@ public class Appointment extends ABaseEntity{
     @Column
     private String patientName;
     @Column
-    private String patientNumber;
+    private String patientPhoneNumber;
     @Column(nullable = false)
     private LocalDate dateOfAppointment;
     @Column(nullable = false)

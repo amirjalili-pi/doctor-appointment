@@ -8,8 +8,5 @@ import lombok.EqualsAndHashCode;
 @Data
 
 public class RemoveOpenAppointmentRequestDto extends AAppointmentWsDto {
-    @Override
-    public String getKey() {
-        return getDate() + getTimeOfStart() + getTimeOfFinish();
-    }
+
 }

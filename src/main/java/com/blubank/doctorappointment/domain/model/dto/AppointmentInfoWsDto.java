@@ -14,7 +14,7 @@ public class AppointmentInfoWsDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String patientName;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String patientNumber;
+    private String patientPhoneNumber;
     private String dateOfAppointment;
     private String timeOfStart;
     private String timeOfFinish;

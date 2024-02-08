@@ -15,4 +15,10 @@ public abstract class AAppointmentWsDto extends ARequestBaseDto{
     private String timeOfStart;
 
     private String timeOfFinish;
+
+
+    @Override
+    public String getKey() {
+        return getDate() + getTimeOfStart() + getTimeOfFinish();
+    }
 }

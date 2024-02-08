@@ -9,8 +9,7 @@ import java.util.List;
 public enum ActionTypeEnum {
     InsertByDoctor(0),
     UpdateByPatient(1),
-    DeleteByDoctor(2),
-    ReadByPatient(3);
+    DeleteByDoctor(2);
 
     ActionTypeEnum(int ModifyActionTypeCode) {
         this.ModifyActionTypeCode = ModifyActionTypeCode;
@@ -46,8 +45,6 @@ public enum ActionTypeEnum {
                 return "UpdateByPatient";
             case DeleteByDoctor:
                 return "DeleteByDoctor";
-            case ReadByPatient:
-                return "ReadByPatient";
             default:
                 return "Undefined";
         }

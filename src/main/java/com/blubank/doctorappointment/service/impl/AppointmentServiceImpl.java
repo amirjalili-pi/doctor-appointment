@@ -6,7 +6,6 @@ import com.blubank.doctorappointment.domain.model.entity.Appointment;
 import com.blubank.doctorappointment.service.IAppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -26,52 +25,24 @@ public class AppointmentServiceImpl implements IAppointmentService {
         this.appointmentDao = appointmentDao;
     }
 
-
-//    @Transactional
-//    @Override
-//    public boolean addOpenAppointment(AddAppointmentRequestDtoRequest request) {
-//        boolean result = true;
-//        result = addOpenTimeRequestValidator.validate(request);
-//        if (result) {
-//        LocalTime timeOfStart = LocalTime.parse(request.getTimeOfStart());
-//        LocalTime timeOfFinish = LocalTime.parse(request.getTimeOfFinish());
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//        LocalDate dateOfAppointment = LocalDate.parse(request.getDate(), formatter);
-//            LocalTime timeOfEndingAppointment = timeOfStart.plusMinutes(30L);
-//            while (timeOfEndingAppointment.isBefore(timeOfFinish)) {
-//
-//                Appointment appointment = createOpenAppointment(timeOfStart, timeOfEndingAppointment, dateOfAppointment);
-//                Optional<Appointment> optionalExistAppointment = appointmentRepository.findAppointmentByDateAndStartTimeAndFinishTime(dateOfAppointment, timeOfStart, timeOfEndingAppointment);
-//                if (optionalExistAppointment.isEmpty()) {
-//                    appointmentRepository.save(appointment);
-//                }
-//                timeOfStart = timeOfEndingAppointment;
-//                timeOfEndingAppointment = timeOfEndingAppointment.plusMinutes(30L);
-//
-//            }
-//        }
-//        return result;
-//    }
-
-    @Transactional
     @Override
-    public void addAppointment(Appointment appointment) {
-        appointmentDao.addAppointment(appointment);
+    public void saveAppointment(Appointment appointment) {
+        appointmentDao.saveAppointment(appointment);
     }
 
-    @Transactional
+
+
+
     @Override
     public void deleteAppointment(Appointment appointment) {
         appointmentDao.deleteAppointment(appointment.getDateOfAppointment(), appointment.getTimeOfStart(), appointment.getTimeOfFinish());
     }
 
-    @Transactional
     @Override
     public Optional<Appointment> findAppointmentByDateAndTimeOfStartAndTimeOfFinish(LocalDate dateOfAppointment, LocalTime timeOfStart, LocalTime timeOfFinish) {
         return appointmentDao.findAppointmentByDateAndTimeOfStartAndTimeOfFinish(dateOfAppointment, timeOfStart, timeOfFinish);
     }
 
-    @Transactional
     @Override
     public List<AppointmentInfoWsDto> getAllAppointmentsAsInfoWsDto() {
         List<Appointment> appointments = appointmentDao.getAllAppointments();
@@ -87,7 +58,14 @@ public class AppointmentServiceImpl implements IAppointmentService {
     public List<AppointmentInfoWsDto> findAppointmentsByDateAndReservedFlag(String date, Boolean isReserved) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDate dateOfAppointment = LocalDate.parse(date, formatter);
-        List<Appointment> appointments = appointmentDao.findAppointmentByDateAndReservedFlag(dateOfAppointment, isReserved);
+        List<Appointment> appointments = appointmentDao.findAppointmentsByDateAndReservedFlag(dateOfAppointment, isReserved);
+        List<AppointmentInfoWsDto> appointmentInfoWsDtoList = appointments.stream().map(this::mapToAppointmentWsDto).collect(Collectors.toList());
+        return appointmentInfoWsDtoList;
+    }
+
+    @Override
+    public List<AppointmentInfoWsDto> findAppointmentsByPhoneNumber(String phoneNumber) {
+        List<Appointment> appointments = appointmentDao.findAppointmentsByPhoneNumber(phoneNumber);
         List<AppointmentInfoWsDto> appointmentInfoWsDtoList = appointments.stream().map(this::mapToAppointmentWsDto).collect(Collectors.toList());
         return appointmentInfoWsDtoList;
     }
@@ -97,7 +75,7 @@ public class AppointmentServiceImpl implements IAppointmentService {
         AppointmentInfoWsDto appointmentWsDto = new AppointmentInfoWsDto();
         appointmentWsDto.setId(appointment.getId());
         appointmentWsDto.setPatientName(appointment.getPatientName());
-        appointmentWsDto.setPatientNumber(appointment.getPatientNumber());
+        appointmentWsDto.setPatientPhoneNumber(appointment.getPatientPhoneNumber());
         appointmentWsDto.setIsReserved(appointment.getIsReserved());
         appointmentWsDto.setTimeOfStart(appointment.getTimeOfStart().format(DateTimeFormatter.ofPattern("HH:mm")));
         appointmentWsDto.setTimeOfFinish(appointment.getTimeOfFinish().format(DateTimeFormatter.ofPattern("HH:mm")));

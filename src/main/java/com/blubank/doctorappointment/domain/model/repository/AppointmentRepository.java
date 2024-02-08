@@ -23,4 +23,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     @Query(value = "select * from appointment where date_of_appointment = :date_of_appointment and is_reserved = :is_reserved", nativeQuery = true)
     List<Appointment> findAppointmentsByDateAndReservedFlag(@Param("date_of_appointment") LocalDate dateOfAppointment, @Param("is_reserved") Boolean isReserved);
+
+    @Query(value = "select * from appointment where patient_phone_number = :patient_phone_number", nativeQuery = true)
+    List<Appointment> findAppointmentsByPhoneNumber(@Param("patient_phone_number") String phoneNumber);
 }

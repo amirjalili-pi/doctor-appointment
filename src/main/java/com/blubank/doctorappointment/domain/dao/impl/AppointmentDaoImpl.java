@@ -33,23 +33,26 @@ public class AppointmentDaoImpl implements IAppointmentDao {
     }
 
     @Override
-    public boolean deleteAppointment(LocalDate dateOfAppointment, LocalTime timeOfStart, LocalTime timeOfFinish) {
+    public void deleteAppointment(LocalDate dateOfAppointment, LocalTime timeOfStart, LocalTime timeOfFinish) {
         Optional<Appointment> optionalAppointment = appointmentRepository.findAppointmentByDateAndStartTimeAndFinishTime(dateOfAppointment, timeOfStart, timeOfFinish);
         if (optionalAppointment.isPresent()) {
             appointmentRepository.delete(optionalAppointment.get());
-            return true;
+
         }
-        return false;
     }
 
     @Override
-    public boolean addAppointment(Appointment appointment) {
+    public void saveAppointment(Appointment appointment) {
         appointmentRepository.save(appointment);
-        return true;
+
+    }
+    @Override
+    public List<Appointment> findAppointmentsByDateAndReservedFlag(LocalDate dateOfAppointment, Boolean isReserved) {
+        return appointmentRepository.findAppointmentsByDateAndReservedFlag(dateOfAppointment, isReserved);
     }
 
     @Override
-    public List<Appointment> findAppointmentByDateAndReservedFlag(LocalDate dateOfAppointment, Boolean isReserved) {
-        return appointmentRepository.findAppointmentsByDateAndReservedFlag(dateOfAppointment, isReserved);
+    public List<Appointment> findAppointmentsByPhoneNumber(String phoneNumber) {
+        return appointmentRepository.findAppointmentsByPhoneNumber(phoneNumber);
     }
 }

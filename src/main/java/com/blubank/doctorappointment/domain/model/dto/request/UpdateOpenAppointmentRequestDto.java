@@ -1,16 +1,19 @@
 package com.blubank.doctorappointment.domain.model.dto.request;
 
 import com.blubank.doctorappointment.domain.model.dto.AAppointmentWsDto;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.io.Serializable;
-
+import lombok.NoArgsConstructor;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class UpdateOpenAppointmentRequestDto extends AAppointmentWsDto {
 
-public class AddOpenAppointmentRequestDto extends AAppointmentWsDto implements Serializable {
+    private String phoneNumber;
 
+    private String name;
 
 }

@@ -1,6 +1,5 @@
 package com.blubank.doctorappointment.domain.dao;
 
-import com.blubank.doctorappointment.domain.model.dto.AppointmentInfoWsDto;
 import com.blubank.doctorappointment.domain.model.entity.Appointment;
 
 import java.time.LocalDate;
@@ -14,10 +13,11 @@ public interface IAppointmentDao {
 
     List<Appointment> getAllAppointments();
 
-    boolean deleteAppointment(LocalDate dateOfAppointment, LocalTime timeOfStart, LocalTime timeOfFinish);
+    void deleteAppointment(LocalDate dateOfAppointment, LocalTime timeOfStart, LocalTime timeOfFinish);
 
-    boolean addAppointment(Appointment appointment);
+    void saveAppointment(Appointment appointment);
+    List<Appointment> findAppointmentsByDateAndReservedFlag(LocalDate dateOfAppointment, Boolean isReserved);
 
-    List<Appointment> findAppointmentByDateAndReservedFlag(LocalDate dateOfAppointment, Boolean isReserved);
+    List<Appointment> findAppointmentsByPhoneNumber(String phoneNumber);
 
 }

@@ -6,13 +6,12 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class GetOpenAppointmentRequestDto extends ARequestBaseDto {
+public class GetOpenAppointmentsByPhoneRequestDto extends ARequestBaseDto {
 
-    private String date;
-
+    private String phoneNumber;
 
     @Override
     public String getKey() {
-        return date;
+        return phoneNumber;
     }
 }

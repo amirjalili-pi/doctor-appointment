@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IAppointmentService {
-    void addAppointment(Appointment appointment);
+    void saveAppointment(Appointment appointment);
 
     void deleteAppointment(Appointment appointment);
 
@@ -18,8 +18,7 @@ public interface IAppointmentService {
     List<AppointmentInfoWsDto> getAllAppointmentsAsInfoWsDto();
 
     List<AppointmentInfoWsDto> findAppointmentsByDateAndReservedFlag(String dateOfAppointment, Boolean isReserved);
-
-//    <R extends AAppointmentWsDto>  boolean startProcess(ActionTypeEnum actionType, R request);
+    List<AppointmentInfoWsDto> findAppointmentsByPhoneNumber(String phoneNumber);
 
 
 }

@@ -19,6 +19,8 @@ import java.util.Map;
 public abstract class AAppointmentProcessor<R extends ARequestBaseDto> implements IAppointmentProcessor<R> {
 
 
+    public static final String APPOINTMENT_NOT_FOUND_MESSAGE = "appointment not found";
+    public static final String APPOINTMENT_HAS_BEEN_TAKEN_MESSAGE = "appointment has been taken";
     HazelcastInstance hzInstance = Hazelcast.newHazelcastInstance();
     private final IRequestValidator<R> requestValidator;
 
@@ -42,6 +44,7 @@ public abstract class AAppointmentProcessor<R extends ARequestBaseDto> implement
                         result = executeInternalProcess(request);
                         break;
                     case DeleteByDoctor:
+                    case UpdateByPatient:
                         String key = request.getKey();
                         if (keyMap.containsKey(key)) {
                             result = false;

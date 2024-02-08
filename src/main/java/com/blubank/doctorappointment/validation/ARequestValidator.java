@@ -12,6 +12,7 @@ public abstract class ARequestValidator<R extends ARequestBaseDto> implements IR
 
     public static final Pattern DATE_PATTERN = Pattern.compile("(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[1,2])-(19|20)\\d{2}"); // datePattern
     public static final Pattern TIME_PATTERN = Pattern.compile("([01]?[0-9]|2[0-3]):[0-5][0-9]"); // datePattern
+    public static final Pattern PHONE_NUMBER_PATTERN = Pattern.compile("^(0|0098|\\+98)9(0[1-5]|[1 3]\\d|2[0-2]|98)\\d{7}$"); // phoneNumberPattern
     public static final String INVALID_FORMAT_MESSAGE = "field format is invalid";
     public static final String MANDATORY_FORMAT_MESSAGE = "field is mandatory";
     public static final String START_TIME_IS_AFTER_BIGGER_END_TIME_MESSAGE = "timeOfStart is after timeOfFinish";

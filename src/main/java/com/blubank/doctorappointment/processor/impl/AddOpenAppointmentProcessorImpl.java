@@ -40,7 +40,7 @@ public class AddOpenAppointmentProcessorImpl extends AAppointmentProcessor<AddOp
             Appointment appointment = createOpenAppointment(timeOfStart, timeOfEndingAppointment, dateOfAppointment);
             Optional<Appointment> optionalExistAppointment = appointmentService.findAppointmentByDateAndTimeOfStartAndTimeOfFinish(dateOfAppointment, timeOfStart, timeOfEndingAppointment);
             if (optionalExistAppointment.isEmpty()) {
-                appointmentService.addAppointment(appointment);
+                appointmentService.saveAppointment(appointment);
             }
             timeOfStart = timeOfEndingAppointment;
             timeOfEndingAppointment = timeOfEndingAppointment.plusMinutes(30L);
