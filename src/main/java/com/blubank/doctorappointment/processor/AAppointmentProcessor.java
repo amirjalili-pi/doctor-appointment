@@ -9,6 +9,7 @@ import com.blubank.doctorappointment.service.IAppointmentService;
 import com.blubank.doctorappointment.validation.IRequestValidator;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
+@Slf4j
 public abstract class AAppointmentProcessor<R extends ARequestBaseDto> implements IAppointmentProcessor<R> {
 
 
@@ -63,6 +65,7 @@ public abstract class AAppointmentProcessor<R extends ARequestBaseDto> implement
             }
             return result;
         } catch (Exception e) {
+            log.debug("an error occurred during proccessing request: " + e.getMessage());
             ErrorObjectDto errorObjectDto = new ErrorObjectDto("process: " + actionType.toString() + "Appointment", HttpStatus.INTERNAL_SERVER_ERROR.value(), "an exception occurred during executing process");
             request.getErrorObjects().add(errorObjectDto);
             return false;

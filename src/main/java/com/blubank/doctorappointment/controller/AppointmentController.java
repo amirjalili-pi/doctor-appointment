@@ -13,6 +13,7 @@ import com.blubank.doctorappointment.validation.impl.GetOpenAppointmentsByPhoneN
 import com.blubank.doctorappointment.validation.impl.GetOpenAppointmentsRequestValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/appointment")
 @Tag(name = "AppointmentApi", description = "patient can reserve, open appointment and see their reserved appointments, doctors must be authenticated, they can add, remove open appointments and see open, taken appointments")
+@Slf4j
 public class AppointmentController {
 
     private final AppointmentProcessorFactory appointmentProcessorFactory;
@@ -57,6 +59,7 @@ public class AppointmentController {
             ResponseDto responseDto = handleErrorMessages(requestDto, Boolean.TRUE);
             return new ResponseEntity<>(responseDto, HttpStatus.OK);
         } catch (Exception e) {
+            log.debug("an exception occurred during delete open appointment: " + e.getMessage());
             ResponseDto responseDto = new ResponseDto(Boolean.FALSE, null);
             return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -75,7 +78,7 @@ public class AppointmentController {
             ResponseDto responseDto = handleErrorMessages(requestDto, Boolean.TRUE);
             return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
         } catch (Exception e) {
-            // add log
+            log.debug("an exception occurred during adding open appointment: " + e.getMessage());
             ResponseDto responseDto = new ResponseDto(Boolean.FALSE, null);
             return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -93,6 +96,7 @@ public class AppointmentController {
             responseDto.setErrorObjectList(null);
             return new ResponseEntity<>(responseDto, HttpStatus.OK);
         } catch (Exception e) {
+            log.debug("an exception occurred during get all appointmetn: " + e.getMessage());
             ResponseDto responseDto = new ResponseDto(Boolean.FALSE, null);
             return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -118,6 +122,7 @@ public class AppointmentController {
 
             }
         } catch (Exception e) {
+            log.debug("an exception occurred during getting appointment by patient: " + e.getMessage());
             ResponseDto responseDto = new ResponseDto(Boolean.FALSE, null);
             return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -144,6 +149,7 @@ public class AppointmentController {
 
             }
         } catch (Exception e) {
+            log.debug("an exception occurred during fetching reserved appointments by phoneNumber: " + e.getMessage());
             ResponseDto responseDto = new ResponseDto(Boolean.FALSE, null);
             return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -162,7 +168,7 @@ public class AppointmentController {
             ResponseDto responseDto = handleErrorMessages(requestDto, Boolean.TRUE);
             return new ResponseEntity<>(responseDto, HttpStatus.OK);
         } catch (Exception e) {
-            // add log
+            log.debug("an excpetion occurred during updating open appointment by patient: " + e.getMessage());
             ResponseDto responseDto = new ResponseDto(Boolean.FALSE, null);
             return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
         }

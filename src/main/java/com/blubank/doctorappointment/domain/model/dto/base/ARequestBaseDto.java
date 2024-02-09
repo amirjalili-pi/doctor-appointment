@@ -16,13 +16,11 @@ import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
 @Setter
 public abstract class ARequestBaseDto implements Serializable {
     @JsonIgnore
-    @Schema(accessMode = READ_ONLY)
     private List<ErrorObjectDto> errorObjects = new ArrayList<>();
 
 
 
     @JsonIgnore
-    @Schema(accessMode = READ_ONLY)
     public abstract String getKey();
 
 }

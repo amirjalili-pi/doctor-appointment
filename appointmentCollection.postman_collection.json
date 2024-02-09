@@ -103,7 +103,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"date\": \"05-05-2023\",\n    \"timeOfStart\": \"13:02\",\n    \"timeOfFinish\": \"13:32\"\n}",
+					"raw": "{\n    \"date\": \"06-05-2023\",\n    \"timeOfStart\": \"13:12\",\n    \"timeOfFinish\": \"18:32\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -164,7 +164,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"date\": \"05-05-2023\",\n    \"timeOfStart\": \"19:35\",\n    \"timeOfFinish\": \"20:05\"\n}",
+					"raw": "{\n    \"date\": \"06-05-2023\",\n    \"timeOfStart\": \"13:42\",\n    \"timeOfFinish\": \"14:12\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -213,7 +213,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"Amirmahdi\",\n    \"phoneNumber\": \"09391123923\",\n    \"date\": \"04-05-2023\",\n    \"timeOfStart\": \"13:32\",\n    \"timeOfFinish\": \"14:02\"\n}",
+					"raw": "{\n    \"name\": \"Amirmahdi\",\n    \"phoneNumber\": \"09391123923\",\n    \"date\": \"09-05-2023\",\n    \"timeOfStart\": \"13:42\",\n    \"timeOfFinish\": \"14:12\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -244,7 +244,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/api/v1/appointment/patient/open-appointments/04-05-2023",
+					"raw": "localhost:8080/api/v1/appointment/patient/open-appointments/06-05-2023",
 					"host": [
 						"localhost"
 					],
@@ -255,7 +255,7 @@
 						"appointment",
 						"patient",
 						"open-appointments",
-						"04-05-2023"
+						"06-05-2023"
 					],
 					"query": [
 						{
