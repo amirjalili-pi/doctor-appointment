@@ -43,6 +43,9 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests.antMatchers("/api/v1/appointment/doctor/**").hasAnyRole("DOCTOR")
                                 .antMatchers("/api/v1/appointment/patient/**").permitAll()
+                                .antMatchers("/v3/api-docs**").permitAll()
+                                .antMatchers("/swagger-ui/**").permitAll()
+                                .antMatchers("/swagger-ui/index.html").permitAll()
                                 .anyRequest().authenticated()
                 )
 //                .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

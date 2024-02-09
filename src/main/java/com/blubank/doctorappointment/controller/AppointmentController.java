@@ -11,6 +11,8 @@ import com.blubank.doctorappointment.processor.IAppointmentProcessor;
 import com.blubank.doctorappointment.service.IAppointmentService;
 import com.blubank.doctorappointment.validation.impl.GetOpenAppointmentsByPhoneNumberRequestValidator;
 import com.blubank.doctorappointment.validation.impl.GetOpenAppointmentsRequestValidator;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/appointment")
+@Tag(name = "AppointmentApi", description = "patient can reserve, open appointment and see their reserved appointments, doctors must be authenticated, they can add, remove open appointments and see open, taken appointments")
 public class AppointmentController {
 
     private final AppointmentProcessorFactory appointmentProcessorFactory;
@@ -42,7 +45,8 @@ public class AppointmentController {
     }
 
     @DeleteMapping("/doctor/delete-open-appointment")
-    public ResponseEntity<ResponseDto> deleteOpenTime(@Valid @RequestBody RemoveOpenAppointmentRequestDto requestDto) {
+    @Operation(summary = "doctors can delete open appointments", description = "must be authenticated")
+    public ResponseEntity<ResponseDto> deleteOpenAppointment(@Valid @RequestBody RemoveOpenAppointmentRequestDto requestDto) {
         try {
             IAppointmentProcessor appointmentProcessor = appointmentProcessorFactory.getAppointmentProcessor(ActionTypeEnum.DeleteByDoctor);
             boolean result = appointmentProcessor.executeProcess(ActionTypeEnum.DeleteByDoctor, requestDto);
@@ -59,6 +63,7 @@ public class AppointmentController {
     }
 
     @PostMapping("/doctor/add-open-appointment")
+    @Operation(summary = "doctors can add open appointment", description = "must be authenticated")
     public ResponseEntity<ResponseDto> addOpenAppointment(@Valid @RequestBody AddOpenAppointmentRequestDto requestDto) {
         try {
             IAppointmentProcessor appointmentProcessor = appointmentProcessorFactory.getAppointmentProcessor(ActionTypeEnum.InsertByDoctor);
@@ -77,6 +82,7 @@ public class AppointmentController {
 
     }
     @GetMapping("/doctor/appointments")
+    @Operation(summary = "doctors can see all appointments: open, taken", description = "must be authenticated")
     public ResponseEntity<ResponseDto> getAllAppointments() {
         try {
             List<AppointmentInfoWsDto> allAppointments = appointmentService.getAllAppointmentsAsInfoWsDto();
@@ -92,6 +98,7 @@ public class AppointmentController {
         }
     }
     @GetMapping("/patient/open-appointments/{date}")
+    @Operation(summary = "patient can see open appointment by entering date", description = "all users permitted")
     public ResponseEntity<ResponseDto> getOpenAppointmentByDate(@PathVariable("date") String dateOfAppointment) {
         try {
             GetOpenAppointmentsRequestDto requestDto = new GetOpenAppointmentsRequestDto(dateOfAppointment);
@@ -117,6 +124,7 @@ public class AppointmentController {
     }
 
     @GetMapping("/patient/patient-appointments/{phoneNumber}")
+    @Operation(summary = "patient can see their reserved appointment by entering phoneNumber", description = "all users permitted")
     public ResponseEntity<ResponseDto> getOpenAppointmentsByPhoneNumber(@PathVariable("phoneNumber") String phoneNumber) {
         try {
             GetOpenAppointmentsByPhoneRequestDto requestDto = new GetOpenAppointmentsByPhoneRequestDto(phoneNumber);
@@ -142,6 +150,7 @@ public class AppointmentController {
     }
 
     @PutMapping("/patient/update-open-appointment")
+    @Operation(summary = "patient can see reserve appointment", description = "all users permitted")
     public ResponseEntity<ResponseDto> updateOpenAppointment(@Valid @RequestBody UpdateOpenAppointmentRequestDto requestDto) {
         try {
             IAppointmentProcessor appointmentProcessor = appointmentProcessorFactory.getAppointmentProcessor(ActionTypeEnum.UpdateByPatient);
