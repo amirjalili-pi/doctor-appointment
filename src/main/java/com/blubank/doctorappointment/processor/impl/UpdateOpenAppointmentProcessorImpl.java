@@ -10,6 +10,7 @@ import com.blubank.doctorappointment.validation.IRequestValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -23,8 +24,9 @@ public class UpdateOpenAppointmentProcessorImpl extends AAppointmentProcessor<Up
         super(requestValidator, appointmentService);
     }
 
+    @Transactional
     @Override
-    protected boolean executeInternalProcess(UpdateOpenAppointmentRequestDto request) {
+    public boolean executeInternalProcess(UpdateOpenAppointmentRequestDto request) {
         boolean result = true;
         LocalTime timeOfStart = LocalTime.parse(request.getTimeOfStart());
         LocalTime timeOfFinish = LocalTime.parse(request.getTimeOfFinish());

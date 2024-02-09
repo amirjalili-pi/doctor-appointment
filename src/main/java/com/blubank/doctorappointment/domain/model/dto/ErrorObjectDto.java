@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@JsonIgnoreProperties(value = {"httpStatusCode"})
 public class ErrorObjectDto {
 
     private String fieldName;

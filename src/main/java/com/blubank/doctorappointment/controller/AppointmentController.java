@@ -91,9 +91,10 @@ public class AppointmentController {
             return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/patient/open-appointments")
-    public ResponseEntity<ResponseDto> getOpenAppointmentByDate(@RequestBody GetOpenAppointmentsRequestDto requestDto) {
+    @GetMapping("/patient/open-appointments/{date}")
+    public ResponseEntity<ResponseDto> getOpenAppointmentByDate(@PathVariable("date") String dateOfAppointment) {
         try {
+            GetOpenAppointmentsRequestDto requestDto = new GetOpenAppointmentsRequestDto(dateOfAppointment);
             boolean result = getOpenAppointmentsRequestValidator.validateRequest(requestDto);
             if (!result) {
                 ResponseDto responseDto = handleErrorMessages(requestDto, result);
@@ -115,9 +116,10 @@ public class AppointmentController {
         }
     }
 
-    @GetMapping("/patient/patient-appointments")
-    public ResponseEntity<ResponseDto> getOpenAppointmentsByPhoneNumber(@RequestBody GetOpenAppointmentsByPhoneRequestDto requestDto) {
+    @GetMapping("/patient/patient-appointments/{phoneNumber}")
+    public ResponseEntity<ResponseDto> getOpenAppointmentsByPhoneNumber(@PathVariable("phoneNumber") String phoneNumber) {
         try {
+            GetOpenAppointmentsByPhoneRequestDto requestDto = new GetOpenAppointmentsByPhoneRequestDto(phoneNumber);
             boolean result = getOpenAppointmentsByPhoneNumberRequestValidator.validateRequest(requestDto);
             if (!result) {
                 ResponseDto responseDto = handleErrorMessages(requestDto, result);

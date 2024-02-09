@@ -35,7 +35,7 @@ public class AppointmentServiceImpl implements IAppointmentService {
 
     @Override
     public void deleteAppointment(Appointment appointment) {
-        appointmentDao.deleteAppointment(appointment.getDateOfAppointment(), appointment.getTimeOfStart(), appointment.getTimeOfFinish());
+        appointmentDao.deleteAppointment(appointment);
     }
 
     @Override

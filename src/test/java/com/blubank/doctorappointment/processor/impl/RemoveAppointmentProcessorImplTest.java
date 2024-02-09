@@ -50,6 +50,7 @@ class RemoveAppointmentProcessorImplTest {
         removeOpenAppointmentRequestDto.setTimeOfStart(timeOfStart.format(DateTimeFormatter.ofPattern("HH:mm")));
         removeOpenAppointmentRequestDto.setTimeOfFinish(timeOfFinish.format(DateTimeFormatter.ofPattern("HH:mm")));
         given(requestValidator.validateRequest(removeOpenAppointmentRequestDto)).willReturn(Boolean.TRUE);
+        given(appointmentService.findAppointmentByDateAndTimeOfStartAndTimeOfFinish(dateOfAppointment, timeOfStart, timeOfFinish)).willReturn(Optional.empty());
         //When
         underTest.executeProcess(ActionTypeEnum.DeleteByDoctor, removeOpenAppointmentRequestDto);
         //Then
@@ -77,5 +78,25 @@ class RemoveAppointmentProcessorImplTest {
         assertThat(removeOpenAppointmentRequestDto.getErrorObjects().get(0).getHttpStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE.value());
         then(appointmentService).should(never()).deleteAppointment(appointment);
 
+    }
+
+    @Test
+    void itShouldDeleteAppointmentWhenIsOpen() {
+        //Given
+        LocalDate dateOfAppointment = LocalDate.now();
+        LocalTime timeOfStart = LocalTime.of(19, 15);
+        LocalTime timeOfFinish = LocalTime.of(20, 30);
+        Appointment appointment = new Appointment(1L, null, null, dateOfAppointment, timeOfStart, timeOfFinish, Boolean.FALSE);
+        RemoveOpenAppointmentRequestDto removeOpenAppointmentRequestDto = new RemoveOpenAppointmentRequestDto();
+        removeOpenAppointmentRequestDto.setDate(dateOfAppointment.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        removeOpenAppointmentRequestDto.setTimeOfStart(timeOfStart.format(DateTimeFormatter.ofPattern("HH:mm")));
+        removeOpenAppointmentRequestDto.setTimeOfFinish(timeOfFinish.format(DateTimeFormatter.ofPattern("HH:mm")));
+        given(requestValidator.validateRequest(removeOpenAppointmentRequestDto)).willReturn(Boolean.TRUE);
+        given(appointmentService.findAppointmentByDateAndTimeOfStartAndTimeOfFinish(dateOfAppointment, timeOfStart, timeOfFinish)).willReturn(Optional.of(appointment));
+        //When
+        underTest.executeProcess(ActionTypeEnum.DeleteByDoctor, removeOpenAppointmentRequestDto);
+        //Then
+        then(appointmentService).should().deleteAppointment(appointment);
+//
     }
 }

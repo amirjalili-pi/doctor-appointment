@@ -13,7 +13,7 @@ public interface IAppointmentDao {
 
     List<Appointment> getAllAppointments();
 
-    void deleteAppointment(LocalDate dateOfAppointment, LocalTime timeOfStart, LocalTime timeOfFinish);
+    void deleteAppointment(Appointment appointment);
 
     Appointment saveAppointment(Appointment appointment);
     List<Appointment> findAppointmentsByDateAndReservedFlag(LocalDate dateOfAppointment, Boolean isReserved);

@@ -33,12 +33,8 @@ public class AppointmentDaoImpl implements IAppointmentDao {
     }
 
     @Override
-    public void deleteAppointment(LocalDate dateOfAppointment, LocalTime timeOfStart, LocalTime timeOfFinish) {
-        Optional<Appointment> optionalAppointment = appointmentRepository.findAppointmentByDateAndStartTimeAndFinishTime(dateOfAppointment, timeOfStart, timeOfFinish);
-        if (optionalAppointment.isPresent()) {
-            appointmentRepository.delete(optionalAppointment.get());
-
-        }
+    public void deleteAppointment(Appointment appointment) {
+            appointmentRepository.delete(appointment);
     }
 
     @Override
