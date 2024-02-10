@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetOpenAppointmentsByPhoneRequestDto extends ARequestBaseDto {
+public class GetReservedAppointmentsByPhoneRequestDto extends ARequestBaseDto {
 
     private String phoneNumber;
 

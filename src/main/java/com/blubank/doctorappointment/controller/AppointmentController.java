@@ -9,7 +9,7 @@ import com.blubank.doctorappointment.domain.model.dto.response.ResponseDto;
 import com.blubank.doctorappointment.factory.AppointmentProcessorFactory;
 import com.blubank.doctorappointment.processor.IAppointmentProcessor;
 import com.blubank.doctorappointment.service.IAppointmentService;
-import com.blubank.doctorappointment.validation.impl.GetOpenAppointmentsByPhoneNumberRequestValidator;
+import com.blubank.doctorappointment.validation.impl.GetReservedAppointmentsByPhoneNumberRequestValidator;
 import com.blubank.doctorappointment.validation.impl.GetOpenAppointmentsRequestValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,15 +34,15 @@ public class AppointmentController {
 
     private final GetOpenAppointmentsRequestValidator getOpenAppointmentsRequestValidator;
 
-    private final GetOpenAppointmentsByPhoneNumberRequestValidator getOpenAppointmentsByPhoneNumberRequestValidator;
+    private final GetReservedAppointmentsByPhoneNumberRequestValidator getReservedAppointmentsByPhoneNumberRequestValidator;
 
     private final IAppointmentService appointmentService;
 
     @Autowired
-    public AppointmentController(AppointmentProcessorFactory appointmentProcessorFactory, GetOpenAppointmentsRequestValidator getOpenAppointmentsRequestValidator, GetOpenAppointmentsByPhoneNumberRequestValidator getOpenAppointmentsByPhoneNumberRequestValidator, IAppointmentService appointmentService) {
+    public AppointmentController(AppointmentProcessorFactory appointmentProcessorFactory, GetOpenAppointmentsRequestValidator getOpenAppointmentsRequestValidator, GetReservedAppointmentsByPhoneNumberRequestValidator getReservedAppointmentsByPhoneNumberRequestValidator, IAppointmentService appointmentService) {
         this.appointmentProcessorFactory = appointmentProcessorFactory;
         this.getOpenAppointmentsRequestValidator = getOpenAppointmentsRequestValidator;
-        this.getOpenAppointmentsByPhoneNumberRequestValidator = getOpenAppointmentsByPhoneNumberRequestValidator;
+        this.getReservedAppointmentsByPhoneNumberRequestValidator = getReservedAppointmentsByPhoneNumberRequestValidator;
         this.appointmentService = appointmentService;
     }
 
@@ -132,8 +132,8 @@ public class AppointmentController {
     @Operation(summary = "patient can see their reserved appointment by entering phoneNumber", description = "all users permitted")
     public ResponseEntity<ResponseDto> getOpenAppointmentsByPhoneNumber(@PathVariable("phoneNumber") String phoneNumber) {
         try {
-            GetOpenAppointmentsByPhoneRequestDto requestDto = new GetOpenAppointmentsByPhoneRequestDto(phoneNumber);
-            boolean result = getOpenAppointmentsByPhoneNumberRequestValidator.validateRequest(requestDto);
+            GetReservedAppointmentsByPhoneRequestDto requestDto = new GetReservedAppointmentsByPhoneRequestDto(phoneNumber);
+            boolean result = getReservedAppointmentsByPhoneNumberRequestValidator.validateRequest(requestDto);
             if (!result) {
                 ResponseDto responseDto = handleErrorMessages(requestDto, result);
                 return new ResponseEntity<>(responseDto, HttpStatus.resolve(responseDto.getHttpStatus()));

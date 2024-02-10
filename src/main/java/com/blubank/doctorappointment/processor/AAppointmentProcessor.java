@@ -65,7 +65,7 @@ public abstract class AAppointmentProcessor<R extends ARequestBaseDto> implement
             }
             return result;
         } catch (Exception e) {
-            log.debug("an error occurred during proccessing request: " + e.getMessage());
+            log.debug("an error occurred during processing request: " + e.getMessage());
             ErrorObjectDto errorObjectDto = new ErrorObjectDto("process: " + actionType.toString() + "Appointment", HttpStatus.INTERNAL_SERVER_ERROR.value(), "an exception occurred during executing process");
             request.getErrorObjects().add(errorObjectDto);
             return false;
